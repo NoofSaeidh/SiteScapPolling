@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{DF2E65A2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiteScrapPolling", "SiteScrapPolling\SiteScrapPolling.csproj", "{2A284130-0FC2-4AC2-9FA2-563851239084}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteScrapPolling.Common", "SiteScrapPolling.Common\SiteScrapPolling.Common.csproj", "{B8670933-2F71-4AE0-9D30-1D1BFE02494C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2A284130-0FC2-4AC2-9FA2-563851239084}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A284130-0FC2-4AC2-9FA2-563851239084}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A284130-0FC2-4AC2-9FA2-563851239084}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8670933-2F71-4AE0-9D30-1D1BFE02494C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8670933-2F71-4AE0-9D30-1D1BFE02494C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8670933-2F71-4AE0-9D30-1D1BFE02494C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8670933-2F71-4AE0-9D30-1D1BFE02494C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
