@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteScrapPolling.Scrap", "SiteScrapPolling.Scrap\SiteScrapPolling.Scrap.csproj", "{506693E7-7522-4689-B770-5F72322BE3E3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteScrapPolling.Polling", "SiteScrapPolling.Polling\SiteScrapPolling.Polling.csproj", "{EC976072-99E2-4E43-A32C-AF6D7BFC3136}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{DF2E65A2-29F7-4CAE-B20D-61EB34085642}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -15,7 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{DF2E65A2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiteScrapPolling", "SiteScrapPolling\SiteScrapPolling.csproj", "{2A284130-0FC2-4AC2-9FA2-563851239084}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteScrapPolling.Common", "SiteScrapPolling.Common\SiteScrapPolling.Common.csproj", "{B8670933-2F71-4AE0-9D30-1D1BFE02494C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiteScrapPolling.Common", "SiteScrapPolling.Common\SiteScrapPolling.Common.csproj", "{B8670933-2F71-4AE0-9D30-1D1BFE02494C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiteScrapPolling.Bots", "SiteScrapPolling.Bots\SiteScrapPolling.Bots.csproj", "{7A152140-848A-491C-BA99-00F08104269E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiteScrapPolling.Scrapping", "SiteScrapPolling.Scrapping\SiteScrapPolling.Scrapping.csproj", "{33C5E726-EB8E-4FA1-8921-40FA5AD76F56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{506693E7-7522-4689-B770-5F72322BE3E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{506693E7-7522-4689-B770-5F72322BE3E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{506693E7-7522-4689-B770-5F72322BE3E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{506693E7-7522-4689-B770-5F72322BE3E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC976072-99E2-4E43-A32C-AF6D7BFC3136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC976072-99E2-4E43-A32C-AF6D7BFC3136}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC976072-99E2-4E43-A32C-AF6D7BFC3136}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC976072-99E2-4E43-A32C-AF6D7BFC3136}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2A284130-0FC2-4AC2-9FA2-563851239084}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2A284130-0FC2-4AC2-9FA2-563851239084}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A284130-0FC2-4AC2-9FA2-563851239084}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +31,14 @@ Global
 		{B8670933-2F71-4AE0-9D30-1D1BFE02494C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8670933-2F71-4AE0-9D30-1D1BFE02494C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8670933-2F71-4AE0-9D30-1D1BFE02494C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A152140-848A-491C-BA99-00F08104269E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A152140-848A-491C-BA99-00F08104269E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A152140-848A-491C-BA99-00F08104269E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A152140-848A-491C-BA99-00F08104269E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33C5E726-EB8E-4FA1-8921-40FA5AD76F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33C5E726-EB8E-4FA1-8921-40FA5AD76F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33C5E726-EB8E-4FA1-8921-40FA5AD76F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33C5E726-EB8E-4FA1-8921-40FA5AD76F56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
