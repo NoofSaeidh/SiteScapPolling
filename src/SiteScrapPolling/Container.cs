@@ -1,11 +1,7 @@
 ﻿using Autofac;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Serilog.Configuration;
+using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
@@ -31,7 +27,7 @@ namespace SiteScapPolling
         {
             const string path = ".\\logs\\";
 
-            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(path: path);
 
             Log.Logger = new LoggerConfiguration()
                          .MinimumLevel.Debug()
@@ -46,9 +42,9 @@ namespace SiteScapPolling
                          .CreateLogger();
 
             var selfLog = File.CreateText(path + "self-log.txt");
-            Serilog.Debugging.SelfLog.Enable(TextWriter.Synchronized(selfLog));
+            SelfLog.Enable(TextWriter.Synchronized(writer: selfLog));
 
-            container.RegisterInstance(Log.Logger);
+            container.RegisterInstance(instance: Log.Logger);
 
             return container;
         }
@@ -66,7 +62,7 @@ namespace SiteScapPolling
         private static LoggerConfiguration RollingFile(this LoggerSinkConfiguration loggerSinkConfiguration,
                                                        string path)
         {
-            return loggerSinkConfiguration.File(CompactJsonFormatter, path, shared: true,
+            return loggerSinkConfiguration.File(formatter: CompactJsonFormatter, path: path, shared: true,
                                                 rollingInterval: RollingInterval.Hour);
         }
     }
