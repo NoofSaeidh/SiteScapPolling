@@ -1,8 +1,10 @@
 ﻿using Autofac;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using SiteScapPolling;
 
-using (var container = Container.Register())
-{
-    container.Resolve<ILogger>().Information("Started");
-}
+
+await Host.CreateDefaultBuilder(args)
+          .ConfigureServices(Services.Configure)
+          .Build()
+          .RunAsync();
