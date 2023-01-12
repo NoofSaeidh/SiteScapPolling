@@ -4,10 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Configuration;
 using Serilog.Debugging;
-using Serilog.Events;
-using Serilog.Formatting.Compact;
 using SiteScrapPolling.Bots.Common;
 using SiteScrapPolling.Bots.Telegram;
 using SiteScrapPolling.Scrapping;
@@ -17,8 +14,6 @@ namespace SiteScapPolling
 {
     internal static class Services
     {
-        private static readonly CompactJsonFormatter CompactJsonFormatter = new();
-
         public static void Configure(HostBuilderContext context, IServiceCollection services)
         {
             services.RegisterLogger(context.Configuration)
@@ -56,13 +51,6 @@ namespace SiteScapPolling
         private static IServiceCollection RegisterScrapper(this IServiceCollection services)
         {
             return services.AddSingleton<IScrapper, DefaultScrapper>();
-        }
-
-        private static LoggerConfiguration RollingFile(this LoggerSinkConfiguration loggerSinkConfiguration,
-                                                       string path)
-        {
-            return loggerSinkConfiguration.File(formatter: CompactJsonFormatter, path: path, shared: true,
-                                                rollingInterval: RollingInterval.Hour);
         }
     }
 }
