@@ -46,7 +46,8 @@ namespace SiteScapPolling
         {
             return services.AddSingleton<IBot, TelegramBot>()
                            .Configure<TelegramBotOptions>(configuration.GetSection("Bots:Telegram"))
-                           .AddHostedService<BotService>();
+                           .AddHostedService<BotService>()
+                           .AddHttpClient();
         }
 
         private static IServiceCollection RegisterScrapper(this IServiceCollection services)

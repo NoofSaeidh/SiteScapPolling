@@ -1,4 +1,5 @@
-﻿using SiteScrapPolling.Scrapping;
+﻿using Serilog.Context;
+using SiteScrapPolling.Scrapping;
 
 namespace SiteScrapPolling.Bots.Common
 {
@@ -17,14 +18,15 @@ namespace SiteScrapPolling.Bots.Common
 
         public async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Logger.Information("Starting bot {Name}", Name);
+            Logger.Information("Starting bot {BotName}", Name);
             try
             {
-                await ExecuteAsyncImpl(stoppingToken);
+                using (LogContext.PushProperty("BotName", Name))
+                    await ExecuteAsyncImpl(stoppingToken);
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Failed to start bot {Name}", Name);
+                Logger.Error(e, "Failed to start bot {BotName}", Name);
             }
         }
 
