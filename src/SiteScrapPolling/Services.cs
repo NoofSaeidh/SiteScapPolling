@@ -17,7 +17,7 @@ namespace SiteScapPolling
         public static void Configure(HostBuilderContext context, IServiceCollection services)
         {
             services.RegisterLogger(context.Configuration)
-                    .RegisterBots()
+                    .RegisterBots(context.Configuration)
                     .RegisterScrapper();
         }
 
@@ -42,9 +42,10 @@ namespace SiteScapPolling
                            });
         }
 
-        private static IServiceCollection RegisterBots(this IServiceCollection services)
+        private static IServiceCollection RegisterBots(this IServiceCollection services, IConfiguration configuration)
         {
             return services.AddSingleton<IBot, TelegramBot>()
+                           .Configure<TelegramBotOptions>(configuration.GetSection("Bots:Telegram"))
                            .AddHostedService<BotService>();
         }
 

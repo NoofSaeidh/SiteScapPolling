@@ -1,10 +1,10 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Serilog;
 using SiteScapPolling;
 
 
 await Host.CreateDefaultBuilder(args)
           .ConfigureServices(Services.Configure)
+          .ConfigureAppConfiguration(config => config.AddUserSecrets<Program>())
           .Build()
           .RunAsync();
