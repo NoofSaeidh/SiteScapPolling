@@ -1,7 +1,6 @@
-﻿namespace SiteScrapPolling.Bots.Common
+﻿namespace SiteScrapPolling.Bots.Common;
+
+public interface IBot
 {
-    public interface IBot
-    {
-        Task ExecuteAsync(CancellationToken stoppingToken);
-    }
+    Task ExecuteAsync(CancellationToken stoppingToken);
 }

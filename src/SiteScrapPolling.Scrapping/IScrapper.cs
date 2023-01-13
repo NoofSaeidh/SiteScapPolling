@@ -1,7 +1,6 @@
-﻿namespace SiteScrapPolling.Scrapping
+﻿namespace SiteScrapPolling.Scrapping;
+
+public interface IScrapper
 {
-    public interface IScrapper
-    {
-        public IAsyncEnumerable<ScrapResponse> ScrapAsync(ScrapRequest request, CancellationToken cancellationToken);
-    }
+    public IAsyncEnumerable<ScrapResponse> ScrapAsync(ScrapRequest request, CancellationToken cancellationToken);
 }

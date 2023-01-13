@@ -1,6 +1,5 @@
-﻿namespace SiteScrapPolling.Common.Dtos
+﻿namespace SiteScrapPolling.Common.Dtos;
+
+public class ScrapRequest
 {
-    public class ScrapRequest
-    {
-    }
 }
