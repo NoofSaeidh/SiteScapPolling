@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Debugging;
+using SiteScrapPolling.Bots;
 using SiteScrapPolling.Bots.Common;
 using SiteScrapPolling.Bots.Telegram;
 using SiteScrapPolling.Scrapping;
@@ -41,15 +42,7 @@ internal static class Services
                            config.AddSerilog(Log.Logger, dispose: true);
                        });
     }
-
-    private static IServiceCollection RegisterBots(this IServiceCollection services, IConfiguration configuration)
-    {
-        return services.AddSingleton<IBot, TelegramBot>()
-                       .Configure<TelegramBotOptions>(configuration.GetSection("Bots:Telegram"))
-                       .AddHostedService<BotService>()
-                       .AddHttpClient();
-    }
-
+    
     private static IServiceCollection RegisterScrapper(this IServiceCollection services)
     {
         return services.AddSingleton<IScrapper, DefaultScrapper>();

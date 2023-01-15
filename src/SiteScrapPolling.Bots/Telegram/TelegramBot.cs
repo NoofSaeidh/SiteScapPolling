@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using SiteScrapPolling.Bots.Common;
+using SiteScrapPolling.Bots.Telegram.Commands;
 using SiteScrapPolling.Scrapping;
+using System.Net.Http;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -10,39 +12,47 @@ namespace SiteScrapPolling.Bots.Telegram;
 
 public class TelegramBot : BotBase
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly TelegramBotOptions _options;
+    private readonly AllCommands _allCommands;
 
     public TelegramBot(
         ILogger logger,
         IScrapper scrapper,
         IOptions<TelegramBotOptions> options,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        AllCommands allCommands)
         : base(logger, scrapper)
     {
-        _options           = options.Value;
-        _httpClientFactory = httpClientFactory;
+        _allCommands = allCommands;
+        if (options is { Value: { AccessToken: { } accessToken } })
+        {
+            Client = new TelegramBotClient(accessToken, httpClientFactory.CreateClient());
+        }
+        else
+        {
+            Logger.Warning("No Telegram bot access token provided, cannot create Telegram bot");
+            Client = null!;
+        }
     }
 
     public override string Name => "Telegram";
+    internal ITelegramBotClient Client { get; }
 
     protected override async Task ExecuteAsyncImpl(CancellationToken stoppingToken)
     {
-        if (_options.AccessToken == null)
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (Client == null)
         {
-            Logger.Error("No access token provided");
+            Logger.Warning("Skip starting Telegram bot, no access token provided");
             return;
         }
 
-        var client = new TelegramBotClient(_options.AccessToken, _httpClientFactory.CreateClient());
+        await _allCommands.SetupCommands(stoppingToken);
 
-        await SetupCommands(client, stoppingToken);
-            
         Logger.Debug("Start listening");
 
-        await client.ReceiveAsync(
-            updateHandler: HandleUpdate,
-            pollingErrorHandler: HandleError,
+        await Client.ReceiveAsync(
+            updateHandler: (_, u, c) => HandleUpdate(u, c),
+            pollingErrorHandler:  (_, e, c) => HandleError(e, c),
             receiverOptions: new()
             {
                 AllowedUpdates = new[] { UpdateType.Message },
@@ -50,10 +60,9 @@ public class TelegramBot : BotBase
             cancellationToken: stoppingToken);
     }
 
-    private async Task HandleUpdate(ITelegramBotClient client, Update update,
-                                    CancellationToken cancellationToken)
+    private async Task HandleUpdate(Update update, CancellationToken cancellationToken)
     {
-        if (update.Message is not { Text: { } text } message)
+        if (update.Message is not { Text: { } } message)
         {
             Logger.Debug("Update {@Update} skipped", update);
             return;
@@ -62,26 +71,12 @@ public class TelegramBot : BotBase
         Logger.Debug("Update {@Update} received", update);
         Logger.Information("Received message from {ChatId}: {Text}", message.Chat.Id, message.Text);
 
-        await Task.Delay(1000, cancellationToken);
-
-        await client.SendTextMessageAsync(message.Chat, "Hi!", cancellationToken: cancellationToken);
+        await _allCommands.TryHandle(message, cancellationToken);
     }
 
-    private async Task HandleError(ITelegramBotClient client, Exception exception,
-                                   CancellationToken cancellationToken)
+    private async Task HandleError(Exception exception, CancellationToken cancellationToken)
     {
         Logger.Error(exception, "Error while handling update");
     }
 
-    private async Task SetupCommands(ITelegramBotClient client, CancellationToken cancellationToken)
-    {
-        Logger.Information("Setup commands {@Commands}", TelegramBotCommand.All);
-        await client.SetMyCommandsAsync(
-            TelegramBotCommand.All.Select(c => new BotCommand
-            {
-                Command     = c.Command,
-                Description = c.Description
-            }),
-            cancellationToken: cancellationToken);
-    }
 }
