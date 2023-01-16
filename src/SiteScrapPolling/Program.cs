@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using SiteScapPolling;
-
+using SiteScrapPolling;
 
 await Host.CreateDefaultBuilder(args)
           .ConfigureServices(Services.Configure)

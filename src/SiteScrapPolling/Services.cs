@@ -8,10 +8,11 @@ using Serilog.Debugging;
 using SiteScrapPolling.Bots;
 using SiteScrapPolling.Bots.Common;
 using SiteScrapPolling.Bots.Telegram;
+using SiteScrapPolling.Database;
 using SiteScrapPolling.Scrapping;
 using SiteScrapPolling.Scrapping.Scrappers;
 
-namespace SiteScapPolling;
+namespace SiteScrapPolling;
 
 internal static class Services
 {
@@ -19,7 +20,8 @@ internal static class Services
     {
         services.RegisterLogger(context.Configuration)
                 .RegisterBots(context.Configuration)
-                .RegisterScrapper();
+                .RegisterScrapper()
+                .RegisterDatabase(context.Configuration);
     }
 
     private static IServiceCollection RegisterLogger(this IServiceCollection services, IConfiguration configuration)

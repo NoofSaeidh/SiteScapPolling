@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SiteScrapPolling.Common\SiteScrapPolling.Common.csproj" />
+    <ProjectReference Include="..\SiteScrapPolling.Database\SiteScrapPolling.Database.csproj" />
     <ProjectReference Include="..\SiteScrapPolling.Scrapping\SiteScrapPolling.Scrapping.csproj" />
   </ItemGroup>
 
