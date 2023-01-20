@@ -12,71 +12,73 @@ namespace SiteScrapPolling.Bots.Telegram;
 
 public class TelegramBot : BotBase
 {
-    private readonly AllCommands _allCommands;
+    private readonly List<CommandHandlerBase> _handlers;
+    private readonly ITelegramBotClient _client;
+
 
     public TelegramBot(
         ILogger logger,
         IScrapper scrapper,
-        IOptions<TelegramBotOptions> options,
-        IHttpClientFactory httpClientFactory,
-        AllCommands allCommands)
+        ITelegramBotClient telegramBotClient,
+        IEnumerable<CommandHandlerBase> handlers)
         : base(logger, scrapper)
     {
-        _allCommands = allCommands;
-        if (options is { Value: { AccessToken: { } accessToken } })
-        {
-            Client = new TelegramBotClient(accessToken, httpClientFactory.CreateClient());
-        }
-        else
-        {
-            Logger.Warning("No Telegram bot access token provided, cannot create Telegram bot");
-            Client = null!;
-        }
+        _client = telegramBotClient;
+        _handlers = handlers.ToList();
     }
 
     public override string Name => "Telegram";
-    internal ITelegramBotClient Client { get; }
 
     protected override async Task ExecuteAsyncImpl(CancellationToken stoppingToken)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Client == null)
+        if (_client == null)
         {
             Logger.Warning("Skip starting Telegram bot, no access token provided");
             return;
         }
 
-        await _allCommands.SetupCommands(stoppingToken);
+        await SetupCommands(stoppingToken);
 
         Logger.Debug("Start listening");
 
-        await Client.ReceiveAsync(
+        await _client.ReceiveAsync(
             updateHandler: (_, u, c) => HandleUpdate(u, c),
             pollingErrorHandler:  (_, e, c) => HandleError(e, c),
             receiverOptions: new()
             {
-                AllowedUpdates = new[] { UpdateType.Message },
+                AllowedUpdates = Array.Empty<UpdateType>(),
             },
             cancellationToken: stoppingToken);
     }
 
     private async Task HandleUpdate(Update update, CancellationToken cancellationToken)
     {
-        if (update.Message is not { Text: { } } message)
-        {
-            Logger.Debug("Update {@Update} skipped", update);
-            return;
-        }
-
         Logger.Debug("Update {@Update} received", update);
-        Logger.Information("Received message from {ChatId}: {Text}", message.Chat.Id, message.Text);
 
-        await _allCommands.TryHandle(message, cancellationToken);
+        foreach (var handler in _handlers)
+        {
+            if (handler.CanHandle(update))
+            {
+                await handler.TryHandleAsync(update, cancellationToken);
+                break;
+            }
+        }
     }
 
     private async Task HandleError(Exception exception, CancellationToken cancellationToken)
     {
         Logger.Error(exception, "Error while handling update");
+    }
+
+    private async Task SetupCommands(CancellationToken cancellationToken)
+    {
+        // ReSharper disable once PossibleMultipleEnumeration
+        Logger.Information("Setup commands {@Commands}", _handlers.Select(t => t.Command));
+        await _client.SetMyCommandsAsync(
+            // ReSharper disable once PossibleMultipleEnumeration
+            _handlers.Select(t => new BotCommand { Command = t.Command.FullCommand, Description = t.Command.Description }),
+            cancellationToken: cancellationToken);
     }
 
 }

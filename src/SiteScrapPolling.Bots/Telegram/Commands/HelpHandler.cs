@@ -4,13 +4,13 @@ using Telegram.Bot.Types.Enums;
 
 namespace SiteScrapPolling.Bots.Telegram.Commands;
 
-public class HelpCommand : BaseCommand
+public class HelpHandler : CommandHandlerBase
 {
-    public HelpCommand(TelegramBot telegramBot, ILogger logger) : base(telegramBot, logger)
+    public HelpHandler(ITelegramBotClient client, ILogger logger) : base(client, logger)
     {
     }
 
-    public override TelegramBotCommand Command => TelegramBotCommand.Help;
+    public override Command Command { get; } = new("help", "Show help");
 
     protected override async Task HandleAsync(Message message, CancellationToken cancellationToken)
     {
