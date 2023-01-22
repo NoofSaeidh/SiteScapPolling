@@ -12,7 +12,8 @@ namespace SiteScrapPolling.Bots.Telegram;
 
 public class TelegramBot : BotBase
 {
-    private readonly List<CommandHandlerBase> _handlers;
+    private readonly List<CommandHandlerBase> _commandHandlers;
+    private readonly List<CallbackCommandHandlerBase> _callbackHandlers;
     private readonly ITelegramBotClient _client;
 
 
@@ -20,11 +21,13 @@ public class TelegramBot : BotBase
         ILogger logger,
         IScrapper scrapper,
         ITelegramBotClient telegramBotClient,
-        IEnumerable<CommandHandlerBase> handlers)
+        IEnumerable<CommandHandlerBase> handlers,
+        IEnumerable<CallbackCommandHandlerBase> callbackHandlers)
         : base(logger, scrapper)
     {
         _client = telegramBotClient;
-        _handlers = handlers.ToList();
+        _commandHandlers = handlers.ToList();
+        _callbackHandlers = callbackHandlers.ToList();
     }
 
     public override string Name => "Telegram";
@@ -56,12 +59,12 @@ public class TelegramBot : BotBase
     {
         Logger.Debug("Update {@Update} received", update);
 
-        foreach (var handler in _handlers)
+        foreach (var handler in _commandHandlers.OfType<HandlerBase>().Concat(_callbackHandlers))
         {
             if (handler.CanHandle(update))
             {
                 await handler.TryHandleAsync(update, cancellationToken);
-                break;
+                return;
             }
         }
     }
@@ -74,10 +77,10 @@ public class TelegramBot : BotBase
     private async Task SetupCommands(CancellationToken cancellationToken)
     {
         // ReSharper disable once PossibleMultipleEnumeration
-        Logger.Information("Setup commands {@Commands}", _handlers.Select(t => t.Command));
+        Logger.Information("Setup commands {@Commands}", _commandHandlers.Select(t => t.Command));
         await _client.SetMyCommandsAsync(
             // ReSharper disable once PossibleMultipleEnumeration
-            _handlers.Select(t => new BotCommand { Command = t.Command.FullCommand, Description = t.Command.Description }),
+            _commandHandlers.Select(t => new BotCommand { Command = t.Command.FullCommand, Description = t.Command.Description }),
             cancellationToken: cancellationToken);
     }
 

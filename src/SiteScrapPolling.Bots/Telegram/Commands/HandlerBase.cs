@@ -17,6 +17,15 @@ public abstract class HandlerBase
 
     public abstract bool CanHandle(Update update);
 
+    protected virtual bool LogCanHandle(Update update, bool canHandle)
+    {
+        Logger.Debug("Update {@Update} {CanClause} be handled by handler {Handler}",
+                     update, canHandle ? "can" : "cannot", this);
+        return canHandle;
+    }
+
+    
+
 
     public virtual async Task<bool> TryHandleAsync(Update update, CancellationToken cancellationToken)
     {
@@ -34,4 +43,9 @@ public abstract class HandlerBase
     }
 
     protected abstract Task HandleAsync(Update update, CancellationToken cancellationToken);
+
+    public override string ToString()
+    {
+        return GetType().Name;
+    }
 }

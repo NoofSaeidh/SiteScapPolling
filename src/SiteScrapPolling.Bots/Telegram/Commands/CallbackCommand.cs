@@ -5,6 +5,6 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SiteScrapPolling.Bots.Telegram.Commands;
 
-public record struct CallbackCommand(string Label, string CallbackData)
+public record struct CallbackCommand(string Label, string CallbackData /* must be unique */)
 {
 }

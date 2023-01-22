@@ -14,10 +14,7 @@ public abstract class CommandHandlerBase : HandlerBase
 
     public override bool CanHandle(Update update)
     {
-        var result = update?.Message?.Text == Command.FullCommand;
-        Logger.Debug("Update {@Update} {CanClause} be handled by command {Command}",
-                     update, result ? "can" : "cannot", Command.Name);
-        return result;
+        return LogCanHandle(update, update?.Message?.Text == Command.FullCommand);
     }
 
     protected override async Task HandleAsync(Update update, CancellationToken cancellationToken)

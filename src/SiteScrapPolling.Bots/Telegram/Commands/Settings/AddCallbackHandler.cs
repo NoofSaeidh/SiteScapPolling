@@ -12,13 +12,11 @@ public class AddCallbackHandler : SettingsCallbackHandlerBase
     }
 
     public override CallbackCommand Command { get; } = new("Add", "settings_add");
-
-    public override bool CanHandle(Update update)
+    
+    protected override async Task HandleAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
-
-    protected override async Task HandleAsync(Update update, CancellationToken cancellationToken)
-    {
+        await Client.AnswerCallbackQueryAsync(callbackQuery.Id, cancellationToken: cancellationToken);
+        await Client.SendTextMessageAsync(GetChatId(callbackQuery), "Enter site name",
+                                          cancellationToken: cancellationToken);
     }
 }

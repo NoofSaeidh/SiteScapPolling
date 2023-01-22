@@ -29,8 +29,8 @@ namespace SiteScrapPolling.Bots
                            .AddSingleton<TelegramBot>()
                            .AddSingleton<IBot>(s => s.GetRequiredService<TelegramBot>())
                            .FromAssembly<CommandHandlerBase>(t => services.AddSingleton(typeof(CommandHandlerBase), t))
-                           .FromAssembly<SettingsCallbackHandlerBase>(
-                               t => services.AddSingleton(typeof(SettingsCallbackHandlerBase), t))
+                           .FromAssembly<CallbackCommandHandlerBase>(
+                               t => services.AddSingleton(typeof(CallbackCommandHandlerBase), t))
                            .Configure<TelegramBotOptions>(configuration.GetSection("Bots:Telegram"))
                            .AddHostedService<BotService>()
                            .AddHttpClient();
