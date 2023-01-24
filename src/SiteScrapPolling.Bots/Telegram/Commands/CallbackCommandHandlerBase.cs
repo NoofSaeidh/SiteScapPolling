@@ -1,11 +1,13 @@
 ﻿using Telegram.Bot.Types;
 using Telegram.Bot;
+using SiteScrapPolling.Database.Repositories;
 
 namespace SiteScrapPolling.Bots.Telegram.Commands;
 
 public abstract class CallbackCommandHandlerBase : HandlerBase
 {
-    protected CallbackCommandHandlerBase(ITelegramBotClient client, ILogger logger) : base(client, logger)
+    protected CallbackCommandHandlerBase(ITelegramBotClient client, ILogger logger, IUserRepository userRepository)
+        : base(client, logger, userRepository)
     {
     }
 
@@ -21,11 +23,9 @@ public abstract class CallbackCommandHandlerBase : HandlerBase
     {
         if (update?.CallbackQuery is { } callback)
         {
-            await HandleAsync(callback, cancellationToken);
+            await HandleAsync(callback, update.GetUserId(), cancellationToken);
         }
     }
 
-    protected abstract Task HandleAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken);
-
-    protected virtual long GetChatId(CallbackQuery callbackQuery) => callbackQuery.Message?.Chat.Id ?? callbackQuery.From.Id;
+    protected abstract Task HandleAsync(CallbackQuery callbackQuery, long userId, CancellationToken cancellationToken);
 }

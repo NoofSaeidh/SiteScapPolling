@@ -1,18 +1,21 @@
-﻿using Telegram.Bot.Types;
+﻿using SiteScrapPolling.Database.Repositories;
+using Telegram.Bot.Types;
 using Telegram.Bot;
 
 namespace SiteScrapPolling.Bots.Telegram.Commands;
 
 public abstract class HandlerBase
 {
-    protected HandlerBase(ITelegramBotClient client, ILogger logger)
+    protected HandlerBase(ITelegramBotClient client, ILogger logger, IUserRepository userRepository)
     {
-        Client = client;
-        Logger = logger;
+        Client         = client;
+        Logger         = logger;
+        UserRepository = userRepository;
     }
 
     protected ILogger Logger { get; }
     protected ITelegramBotClient Client { get; }
+    protected IUserRepository UserRepository { get; }
 
 
     public abstract bool CanHandle(Update update);
@@ -24,8 +27,6 @@ public abstract class HandlerBase
         return canHandle;
     }
 
-    
-
 
     public virtual async Task<bool> TryHandleAsync(Update update, CancellationToken cancellationToken)
     {
@@ -33,6 +34,7 @@ public abstract class HandlerBase
         try
         {
             await HandleAsync(update, cancellationToken);
+            await UserRepository.SetLastHandlerAsync(update.GetUserId(), ToString(), cancellationToken);
             return true;
         }
         catch (Exception ex)

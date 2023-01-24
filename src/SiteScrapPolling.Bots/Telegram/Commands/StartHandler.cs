@@ -1,11 +1,13 @@
-﻿using Telegram.Bot;
+﻿using SiteScrapPolling.Database.Repositories;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace SiteScrapPolling.Bots.Telegram.Commands;
 
 public class StartHandler : CommandHandlerBase
 {
-    public StartHandler(ITelegramBotClient client, ILogger logger) : base(client, logger)
+    public StartHandler( ITelegramBotClient client, ILogger logger, IUserRepository userRepository)
+        : base(client, logger, userRepository)
     {
     }
 
